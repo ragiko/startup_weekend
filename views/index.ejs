@@ -34,6 +34,13 @@
 
   <body>
 
+
+<form action="/post" method="POST" enctype="multipart/form-data">
+  <input type="text" name="name" value="" placeholder="">
+  <input type="file" name="file">
+  <input type="submit" name="submit" value="送信">
+</form>
+
   <div ng-controller="ChatCtrl">
     <h1>Simple-Chat</h1>
     <ul>

@@ -11,6 +11,12 @@ var path = require('path');
 
 var app = express();
 
+// add 1
+var formidable = require('formidable');
+var fs = require('fs');
+var util = require('util');
+// ---
+
 var sockjs = require('sockjs');
 
 var connections = [];
@@ -51,6 +57,28 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+
+// add 2
+app.post('/post', function(req, res) {
+
+  var form = new formidable.IncomingForm();
+  form.encoding = "utf-8";
+  form.uploadDir = "./public/images";
+
+  form.parse(req, function(err, fields, files) {
+    res.writeHead(200, {'content-type': 'text/html'});
+    res.write('received upload:\n\n');
+    res.end(util.inspect({fields: fields, files: files}));
+
+    var oldPath = './' + files.file._writeStream.path;
+    var newPath = './public/images/' + files.file.name;
+    fs.rename(oldPath, newPath, function(err) {
+      if (err) throw err;
+    });
+  });
+
+});
 
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
